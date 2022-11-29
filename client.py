@@ -3,15 +3,19 @@ import pygame
 from network import Network
 from src import color
 
+pygame.init()
+
 WIDTH, HEIGHT = 700, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("multiplayer PONG")
 
-# FONT = pygame.font.SysFont("monospace", 50)
+FONT = pygame.font.SysFont("monospace", 50)
 
 
-def draw(win, players, ball):
+def draw(win, players, ball, score):
     win.fill((40, 40, 40))
+
+    score.draw(win)
 
     for player in players:
         player.draw(win)
@@ -35,7 +39,7 @@ def main():
 
     while run:
         clock.tick(60)
-        player2, ball = n.send(player)
+        player2, ball, score = n.send(player)
         # print(scores)
         # won = scores[2]
         # if won:
@@ -56,7 +60,7 @@ def main():
                 pygame.quit()
 
         player.move()
-        draw(WIN, [player, player2], ball)
+        draw(WIN, [player, player2], ball, score)
 
 
 main()
