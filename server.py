@@ -1,5 +1,7 @@
 import socket
 import pickle
+import sys
+import pygame
 from _thread import start_new_thread
 from src.player import Player
 from src.ball import Ball
@@ -47,18 +49,6 @@ def threaded_client(conn, player):
                 else:
                     reply = players[1]
 
-                ball.move()
-                game.handle_collision(ball, players[0], players[1])
-                # print("recieved:", data)
-                # print("sending:", reply)
-
-                if ball.x < 0:
-                    score.score('right')
-                    ball.reset()
-                elif ball.x > WIDTH:
-                    score.score('left')
-                    ball.reset()
-
             # conn.sendall(pickle.dumps((reply, (ball.x, ball.y))))
             conn.sendall(pickle.dumps((
                 reply,
@@ -71,12 +61,42 @@ def threaded_client(conn, player):
     conn.close()
 
 
+clock = pygame.time.Clock()
+
+
+def move_ball(ball):
+    while True:
+        try:
+            clock.tick(60)
+            ball.move()
+
+            game.handle_collision(ball, players[0], players[1])
+            # print("recieved:", data)
+            # print("sending:", reply)
+
+            if ball.x < 0:
+                score.score('right')
+                ball.reset()
+            elif ball.x > WIDTH:
+                score.score('left')
+                ball.reset()
+
+        except:
+            break
+
+
 # left_score = 0
 # right_score = 0
 currentPlayer = 0
+countPlayer = 0
 while True:
     conn, addr = s.accept()
+    countPlayer += 1
     print("connected to", addr)
 
     start_new_thread(threaded_client, (conn, currentPlayer))
+    if countPlayer == 2:
+        start_new_thread(move_ball, (ball, ))
     currentPlayer += 1
+
+sys.exit(0)
