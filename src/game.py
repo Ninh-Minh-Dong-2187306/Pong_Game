@@ -25,3 +25,32 @@ def handle_collision(ball, left_paddle, right_paddle):
                 reduction_factor = (right_paddle.height / 2) / ball.MAX_VEL
                 y_vel = difference_in_y / reduction_factor
                 ball.y_vel = -1 * y_vel
+
+    # def scoring(self, ball):
+    #     if self.ball.x < 0:
+    #         self.right_score += 1
+    #         self.ball.reset()
+    #     elif self.ball.x > self.width:
+    #         self.left_score += 1
+    #         self.ball.reset()
+    #
+    #     won = False
+    #     if self.left_score >= self.win_score:
+    #         won = True
+    #         win_text = "Left won!"
+    #     elif self.right_score >= self.win_score:
+    #         won = True
+    #         win_text = "Right won!"
+    #
+    #     if won:
+    #         text = pygame.font.SysFont("comicsans",
+    #                                    50).render(win_text, 1, color.WHITE)
+    #         self.win.blit(text, (self.width // 2 - text.get_width() // 2,
+    #                              self.height // 2 - text.get_height() // 2))
+    #         pygame.display.update()
+    #         pygame.time.delay(5000)
+    #         self.ball.reset()
+    #         self.left_paddle.reset()
+    #         self.right_paddle.reset()
+    #         self.left_score = 0
+    #         self.right_score = 0
