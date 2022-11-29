@@ -1,7 +1,9 @@
 import socket
 import pickle
+import src.game as g
 from _thread import start_new_thread
 from src.player import Player
+from src.ball import Ball
 
 server = "localhost"
 port = 5555
@@ -20,6 +22,7 @@ players = [
     Player(0, 200, 20, 100, (0, 255, 0)),
     Player(680, 200, 20, 100, (0, 0, 255))
 ]
+ball = Ball(350 - 7, 250 - 7, 7)
 
 
 def threaded_client(conn, player):
@@ -27,7 +30,7 @@ def threaded_client(conn, player):
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(2048))
+            data = pickle.loads(conn.recv(4096))
             players[player] = data
             if not data:
                 print("disconnected")
@@ -37,10 +40,14 @@ def threaded_client(conn, player):
                     reply = players[0]
                 else:
                     reply = players[1]
-                print("recieved:", data)
-                print("sending:", reply)
 
-            conn.sendall(pickle.dumps(reply))
+                ball.move()
+                g.handle_collision(ball, players[0], players[1])
+                # print("recieved:", data)
+                # print("sending:", reply)
+
+            # conn.sendall(pickle.dumps((reply, (ball.x, ball.y))))
+            conn.sendall(pickle.dumps((reply, ball)))
         except:
             break
     print("lost connection")

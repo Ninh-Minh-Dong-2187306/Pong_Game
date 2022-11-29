@@ -16,12 +16,12 @@ class Network:
 
     def connect(self):
         self.client.connect(self.addr)
-        return pickle.loads(self.client.recv(2048))
+        return pickle.loads(self.client.recv(2048 * 2))
 
     def send(self, data):
         try:
             self.client.send(pickle.dumps(data))
-            reply = pickle.loads(self.client.recv(2048))
+            reply = pickle.loads(self.client.recv(4096 * 2))
             return reply
         except socket.error as e:
             return str(e)
